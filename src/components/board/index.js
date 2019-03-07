@@ -9,6 +9,7 @@ export default class Board extends React.Component {
     const status = "Siguiente jugador : X";
     return (
       <div>
+        <div className="status">{status}</div>
         <div className="board-now">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
