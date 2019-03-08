@@ -1,5 +1,24 @@
 import React from "react";
 import Square from "../square";
+
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (const [a, b, c] of lines) {
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+}
+
 export default class Board extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +30,7 @@ export default class Board extends React.Component {
   }
   handleClick(i) {
     const squares = this.state.squares.slice();
+    if (calculateWinner(this.state.squares) || squares[i]) return;
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
   }
@@ -24,7 +44,11 @@ export default class Board extends React.Component {
   }
   render() {
     //Aqui es JS
-    const status = `Siguiente jugador : ${this.state.xIsNext ? "X" : "O"}`;
+    const winner = calculateWinner(this.state.squares);
+
+    let status = winner
+      ? `Ganador ${winner}`
+      : `Siguiente jugador : ${this.state.xIsNext ? "X" : "O"}`;
     return (
       <div>
         <div className="status">{status}</div>
@@ -43,6 +67,14 @@ export default class Board extends React.Component {
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
+        <button
+          onClick={() => {
+            this.setState({ squares: Array(9).fill(null), xIsNext: true });
+          }}
+        >
+          {" "}
+          Reset{" "}
+        </button>
       </div>
     );
   }
